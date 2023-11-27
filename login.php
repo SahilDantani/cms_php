@@ -1,14 +1,14 @@
 <?php
 
-require'includes/url.php';
-
-session_start();
+require 'includes/init.php';
 
 if($_SERVER["REQUEST_METHOD"] == 'POST'){
-    if($_POST['username']=='dave' && $_POST['password']=='secret'){
-        session_regenerate_id(true);
-        $_SESSION['is_logged_in'] = true;
-        redirect('/php_web/cms_php/');
+
+    $conn=require 'includes/db.php';
+
+    if(User::authenticate($conn,$_POST['username'],$_POST['password'])){
+        Auth::login();
+        Url::redirect('/php_web/cms_php/');
     }else{
         $error = "login incorrect";
     }
@@ -21,17 +21,17 @@ if($_SERVER["REQUEST_METHOD"] == 'POST'){
     <?php if(!empty($error)): ?>
         <p><?=$error  ?></p>
     <?php endif; ?>
-    <form action="" method="post">
-        <div>
+    <form method="post">
+        <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" name="username" id="username">
+            <input type="text" name="username" id="username" class="form-control">
         </div>
 
-        <div>
+        <div class="from-group">
             <label for="password">Password</label>
-            <input type="password" name="password" id="password">
+            <input type="password" name="password" id="password" class="form-control">
         </div>
 
-        <button>Log in</button>
+        <button class="btn btn-primary">Log in</button>
     </form>
 <?php require'includes/footer.php'; ?>
